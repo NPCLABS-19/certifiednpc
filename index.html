@@ -87,9 +87,32 @@
         <div class="impact-flash" aria-hidden="true"></div>
 
         <section class="result-screen" aria-hidden="true">
-          <div class="certificate-card">
+          <div class="name-entry-card" hidden>
+            <h1>प्रमाण-पत्र के लिए नाम</h1>
+            <form class="name-form">
+              <label for="certificate-name-input">अपना नाम दर्ज करें</label>
+              <input
+                id="certificate-name-input"
+                class="name-input"
+                name="certificateName"
+                type="text"
+                minlength="2"
+                maxlength="60"
+                pattern="[A-Za-z][A-Za-z .'-]{1,59}"
+                autocomplete="name"
+                placeholder="Your name"
+                required
+              />
+              <p class="name-help">प्रमाण-पत्र पर यही नाम छपेगा। अंग्रेज़ी अक्षरों में लिखें।</p>
+              <p class="name-error" aria-live="polite"></p>
+              <button class="name-submit" type="submit">प्रमाण-पत्र जारी करें</button>
+            </form>
+          </div>
+
+          <div class="certificate-card" hidden>
             <p class="certificate-kicker">भारत गणराज्य के काल्पनिक अभिलेख हेतु</p>
             <h1>एनपीसी प्रमाण-पत्र</h1>
+            <p class="certificate-name"></p>
             <div class="certificate-seal" aria-hidden="true">NPC</div>
             <p class="certificate-copy">
               यह प्रमाणित किया जाता है कि धारक ने आठ प्रश्नों की

@@ -509,6 +509,96 @@ button {
   opacity: 1;
 }
 
+.name-entry-card {
+  width: min(88vw, 520px);
+  padding: clamp(30px, 5vw, 56px);
+  color: #1f1c12;
+  background:
+    linear-gradient(108deg, rgba(97, 74, 29, 0.13), transparent 43% 75%, rgba(53, 42, 17, 0.15)),
+    #bbb58e;
+  border: 4px double #393721;
+  box-shadow:
+    inset 0 0 42px rgba(45, 38, 17, 0.32),
+    0 20px 50px rgba(0, 0, 0, 0.48);
+  text-align: center;
+  transform: rotate(-0.35deg);
+}
+
+.name-entry-card h1 {
+  margin: 0 0 28px;
+  font-family: "Noto Serif Devanagari", "Kohinoor Devanagari", Georgia, serif;
+  font-size: clamp(27px, 4vw, 43px);
+  line-height: 1.2;
+}
+
+.name-form {
+  display: grid;
+  gap: 13px;
+}
+
+.name-form label {
+  font-size: clamp(15px, 1.8vw, 19px);
+  font-weight: 700;
+}
+
+.name-input {
+  width: 100%;
+  height: 52px;
+  padding: 8px 12px;
+  border: 1px solid #393721;
+  border-radius: 0;
+  outline: 0;
+  color: #1f1c12;
+  background: rgba(237, 232, 197, 0.72);
+  box-shadow: inset 0 2px 8px rgba(64, 51, 22, 0.16);
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(17px, 2vw, 22px);
+  text-align: center;
+}
+
+.name-input:focus {
+  background: #eee9c9;
+  box-shadow:
+    inset 0 2px 8px rgba(64, 51, 22, 0.16),
+    0 0 0 2px rgba(57, 55, 33, 0.32);
+}
+
+.name-help,
+.name-error {
+  min-height: 1.35em;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.name-help {
+  opacity: 0.72;
+}
+
+.name-error {
+  color: #6c2219;
+  font-weight: 700;
+}
+
+.name-submit {
+  min-height: 48px;
+  margin: 3px 0 0;
+  padding: 9px 15px 7px;
+  border: 1px solid #393721;
+  border-radius: 0;
+  color: #e4e4c4;
+  background: #23251a;
+  font-family: "Noto Serif Devanagari", "Kohinoor Devanagari", Georgia, serif;
+  font-size: clamp(16px, 1.8vw, 20px);
+  cursor: pointer;
+}
+
+.name-submit:hover,
+.name-submit:focus-visible {
+  color: #17180f;
+  background: #e2dfbc;
+}
+
 .certificate-card {
   position: relative;
   width: min(84vw, 610px);
@@ -559,6 +649,17 @@ button {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 8px;
+}
+
+.certificate-name {
+  max-width: 500px;
+  margin: clamp(22px, 3vw, 34px) auto 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(25px, 4vw, 46px);
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
 }
 
 .certificate-seal {
@@ -928,6 +1029,11 @@ button {
     padding: 28px 22px;
   }
 
+  .name-entry-card {
+    width: min(91vw, 520px);
+    padding: 30px 22px;
+  }
+
   .failure-card {
     width: min(91vw, 520px);
     padding: 34px 24px;
@@ -971,6 +1077,24 @@ button {
     width: min(64vw, 560px);
     min-height: 0;
     padding: 20px 36px;
+  }
+
+  .name-entry-card {
+    width: min(64vw, 520px);
+    padding: 20px 30px;
+  }
+
+  .name-entry-card h1 {
+    margin-bottom: 14px;
+    font-size: 25px;
+  }
+
+  .name-form {
+    gap: 7px;
+  }
+
+  .name-input {
+    height: 42px;
   }
 
   .failure-card {

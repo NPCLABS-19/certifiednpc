@@ -33,7 +33,12 @@
   const flash = document.querySelector(".impact-flash");
   const roaches = [...document.querySelectorAll(".roach")];
   const resultScreen = document.querySelector(".result-screen");
+  const nameEntryCard = document.querySelector(".name-entry-card");
+  const nameForm = document.querySelector(".name-form");
+  const nameInput = document.querySelector(".name-input");
+  const nameError = document.querySelector(".name-error");
   const certificateCard = document.querySelector(".certificate-card");
+  const certificateName = document.querySelector(".certificate-name");
   const failureCard = document.querySelector(".failure-card");
   const failureMessage = document.querySelector(".failure-message");
   const certificateScore = document.querySelector(".certificate-score");
@@ -156,13 +161,15 @@
       roach.hidden = true;
     });
 
-    certificateCard.hidden = !passed;
+    nameEntryCard.hidden = !passed;
+    certificateCard.hidden = true;
     failureCard.hidden = passed;
-    downloadButton.hidden = !passed;
+    downloadButton.hidden = true;
 
     if (passed) {
       certificate = {
         correctCount,
+        name: "",
         serial: createSerial(),
         date: new Intl.DateTimeFormat("en-GB", {
           day: "2-digit",
@@ -182,7 +189,7 @@
     resultScreen.setAttribute("aria-hidden", "false");
     window.setTimeout(
       () =>
-        (passed ? downloadButton : restartButtons[0]).focus({
+        (passed ? nameInput : restartButtons[0]).focus({
           preventScroll: true,
         }),
       900,
@@ -221,7 +228,7 @@
   const escapePdfText = (text) =>
     text.replaceAll("\\", "\\\\").replaceAll("(", "\\(").replaceAll(")", "\\)");
 
-  const buildPdf = async ({ correctCount, serial, date }) => {
+  const buildPdf = async ({ correctCount, name, serial, date }) => {
     const watermarkResponse = await fetch("./assets/npc-watermark.jpg", {
       cache: "force-cache",
     });
@@ -231,6 +238,9 @@
     const watermark = new Uint8Array(await watermarkResponse.arrayBuffer());
     const encoder = new TextEncoder();
     const score = `${correctCount} / ${questions.length}`;
+    const printedName = name.toUpperCase();
+    const nameFontSize = printedName.length > 34 ? 16 : printedName.length > 24 ? 19 : 22;
+    const nameX = Math.max(64, 297 - printedName.length * nameFontSize * 0.29);
     const lines = [
       "q",
       "/GS1 gs",
@@ -255,9 +265,9 @@
       "(THIS CERTIFIES THAT) Tj",
       "ET",
       "BT",
-      "/F2 22 Tf",
-      "184 605 Td",
-      "(ANONYMOUS SUBJECT) Tj",
+      `/F2 ${nameFontSize} Tf`,
+      `${nameX} 605 Td`,
+      `(${escapePdfText(printedName)}) Tj`,
       "ET",
       "BT",
       "/F1 13 Tf",
@@ -349,7 +359,7 @@
   };
 
   const downloadCertificate = async () => {
-    if (!certificate) return;
+    if (!certificate?.name) return;
     const label = downloadButton.textContent;
     downloadButton.disabled = true;
     downloadButton.textContent = "प्रमाण-पत्र तैयार हो रहा है…";
@@ -369,6 +379,27 @@
     }
   };
 
+  const issueNamedCertificate = (event) => {
+    event.preventDefault();
+    if (!certificate) return;
+
+    const name = nameInput.value.trim().replace(/\s+/g, " ");
+    const validName = /^[A-Za-z][A-Za-z .'-]{1,59}$/.test(name);
+    if (!validName) {
+      nameError.textContent = "कृपया 2–60 अंग्रेज़ी अक्षरों में सही नाम दर्ज करें।";
+      nameInput.focus();
+      return;
+    }
+
+    nameError.textContent = "";
+    certificate.name = name;
+    certificateName.textContent = name;
+    nameEntryCard.hidden = true;
+    certificateCard.hidden = false;
+    downloadButton.hidden = false;
+    downloadButton.focus({ preventScroll: true });
+  };
+
   const restartQuiz = () => {
     sessionId += 1;
     currentQuestion = 0;
@@ -378,9 +409,13 @@
     resultScreen.setAttribute("aria-hidden", "true");
     paper.hidden = false;
     controls.hidden = false;
-    certificateCard.hidden = false;
+    nameForm.reset();
+    nameError.textContent = "";
+    certificateName.textContent = "";
+    nameEntryCard.hidden = true;
+    certificateCard.hidden = true;
     failureCard.hidden = true;
-    downloadButton.hidden = false;
+    downloadButton.hidden = true;
     roaches.forEach((roach) => {
       roach.hidden = false;
       roach.classList.remove("is-squashed");
@@ -401,9 +436,13 @@
     quizStage.classList.remove("is-hit");
     resultScreen.classList.remove("is-active");
     resultScreen.setAttribute("aria-hidden", "true");
-    certificateCard.hidden = false;
+    nameForm.reset();
+    nameError.textContent = "";
+    certificateName.textContent = "";
+    nameEntryCard.hidden = true;
+    certificateCard.hidden = true;
     failureCard.hidden = true;
-    downloadButton.hidden = false;
+    downloadButton.hidden = true;
     paper.hidden = false;
     controls.hidden = false;
     roaches.forEach((roach) => {
@@ -424,6 +463,10 @@
   lobbyButton.addEventListener("click", returnToLobby);
   answerButtons.forEach((button) => {
     button.addEventListener("click", () => answerQuestion(button.dataset.answer));
+  });
+  nameForm.addEventListener("submit", issueNamedCertificate);
+  nameInput.addEventListener("input", () => {
+    nameError.textContent = "";
   });
   downloadButton.addEventListener("click", downloadCertificate);
   restartButtons.forEach((button) => {
