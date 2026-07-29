@@ -23,7 +23,7 @@
     <title>Certified NPC</title>
     <link rel="preload" href="./assets/quiz-desk.jpg" as="image" />
     <link rel="preload" href="./assets/officer-jumpscare.jpg" as="image" />
-    <link rel="preload" href="./assets/question-sheet.jpg" as="image" />
+    <link rel="preload" href="./assets/question-sheet-v2.jpg" as="image" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -64,7 +64,9 @@
         </div>
 
         <article class="question-paper" aria-live="polite">
-          <div class="question-portrait" role="img"></div>
+          <div class="question-portrait" role="img">
+            <span class="question-topic" aria-hidden="true">FEMINISM</span>
+          </div>
           <p class="question-word">समर्थन?</p>
         </article>
 
@@ -91,6 +93,15 @@
             </p>
             <p class="certificate-score"></p>
             <p class="certificate-serial"></p>
+            <p class="certificate-issuer">
+              Issued by the Central NPC Accreditation Committee
+            </p>
+          </div>
+
+          <div class="failure-card" hidden>
+            <p class="failure-mark" aria-hidden="true">×</p>
+            <h1>प्रमाण-पत्र अस्वीकृत</h1>
+            <p class="failure-message"></p>
           </div>
 
           <button class="download-button" type="button">

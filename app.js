@@ -3,13 +3,13 @@
 
   const questions = [
     { subject: "बेंजामिन नेतन्याहू", x: "0%", y: "0%" },
-    { subject: "डोनाल्ड ट्रम्प", x: "33.333%", y: "0%" },
-    { subject: "नरेंद्र मोदी", x: "66.666%", y: "0%" },
-    { subject: "एलन मस्क", x: "100%", y: "0%" },
-    { subject: "कृत्रिम बुद्धिमत्ता", x: "0%", y: "100%" },
-    { subject: "सैन्य ड्रोन", x: "33.333%", y: "100%" },
-    { subject: "निगरानी कैमरा", x: "66.666%", y: "100%" },
-    { subject: "व्यवस्था", x: "100%", y: "100%" },
+    { subject: "नरेंद्र मोदी", x: "33.333%", y: "0%" },
+    { subject: "FEMINISM", x: "66.666%", y: "0%", topic: "FEMINISM" },
+    { subject: "कृत्रिम बुद्धिमत्ता", x: "100%", y: "0%" },
+    { subject: "अर्नब गोस्वामी", x: "0%", y: "100%" },
+    { subject: "महात्मा गांधी", x: "33.333%", y: "100%" },
+    { subject: "डोनाल्ड ट्रम्प", x: "66.666%", y: "100%" },
+    { subject: "मुकेश अंबानी", x: "100%", y: "100%" },
   ];
 
   const body = document.body;
@@ -18,16 +18,20 @@
   const quizStage = document.querySelector(".quiz-stage");
   const paper = document.querySelector(".question-paper");
   const portrait = document.querySelector(".question-portrait");
+  const topic = document.querySelector(".question-topic");
   const controls = document.querySelector(".answer-controls");
   const answerButtons = [...document.querySelectorAll(".answer-button")];
   const officer = document.querySelector(".officer-jumpscare");
   const flash = document.querySelector(".impact-flash");
   const roaches = [...document.querySelectorAll(".roach")];
   const resultScreen = document.querySelector(".result-screen");
+  const certificateCard = document.querySelector(".certificate-card");
+  const failureCard = document.querySelector(".failure-card");
+  const failureMessage = document.querySelector(".failure-message");
   const certificateScore = document.querySelector(".certificate-score");
   const certificateSerial = document.querySelector(".certificate-serial");
   const downloadButton = document.querySelector(".download-button");
-  const restartButton = document.querySelector(".restart-button");
+  const restartButtons = [...document.querySelectorAll(".restart-button")];
 
   let currentQuestion = 0;
   let answers = [];
@@ -52,8 +56,13 @@
     const question = questions[index];
     portrait.style.backgroundPosition = `${question.x} ${question.y}`;
     portrait.setAttribute("aria-label", `${question.subject}: समर्थन?`);
+    topic.textContent = question.topic || "";
+    portrait.classList.toggle("has-topic", Boolean(question.topic));
     paper.style.setProperty("--paper-turn", `${index % 2 === 0 ? -1.4 : 1.1}deg`);
-    paper.classList.remove("is-yes", "is-no", "is-entering");
+    paper.getAnimations().forEach((animation) => animation.cancel());
+    paper.style.removeProperty("opacity");
+    paper.style.removeProperty("will-change");
+    paper.classList.remove("is-no", "is-entering");
     void paper.offsetWidth;
     paper.classList.add("is-entering");
   };
@@ -88,13 +97,73 @@
   const yesSequence = async () => {
     const roach = roaches[currentQuestion % roaches.length];
     paper.classList.remove("is-entering");
-    paper.classList.add("is-yes");
-    await wait(770);
+    paper.getAnimations().forEach((animation) => animation.cancel());
+    roach.style.animationPlayState = "paused";
+
+    const paperRect = paper.getBoundingClientRect();
+    const roachRect = roach.getBoundingClientRect();
+    const deltaX =
+      roachRect.left + roachRect.width / 2 - (paperRect.left + paperRect.width / 2);
+    const deltaY =
+      roachRect.top + roachRect.height / 2 - (paperRect.top + paperRect.height / 2);
+    const turn = currentQuestion % 2 === 0 ? -1.4 : 1.1;
+    const base = `translate(-50%, -50%) rotate(${turn}deg) perspective(650px) rotateX(4deg)`;
+    const move = (x, y, rotation, scaleX, scaleY) =>
+      `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${rotation}deg) scaleX(${scaleX}) scaleY(${scaleY})`;
+
+    paper.style.willChange = "transform, opacity";
+    const swat = paper.animate(
+      [
+        { transform: base, opacity: 1, offset: 0 },
+        {
+          transform: move(0, 0, 87, 0.16, 1.04),
+          opacity: 1,
+          offset: 0.3,
+        },
+        {
+          transform: move(deltaX * 0.42, deltaY * 0.2 - 34, 94, 0.13, 1),
+          opacity: 1,
+          offset: 0.52,
+        },
+        {
+          transform: move(deltaX * 0.86, deltaY * 0.52 - 48, 103, 0.13, 0.98),
+          opacity: 1,
+          offset: 0.73,
+        },
+        {
+          transform: move(deltaX, deltaY, 108, 0.2, 0.48),
+          opacity: 1,
+          offset: 0.82,
+        },
+        {
+          transform: move(deltaX * 0.91, deltaY * 0.7 - 20, 104, 0.13, 0.86),
+          opacity: 1,
+          offset: 0.91,
+        },
+        {
+          transform: move(deltaX, deltaY, 109, 0.16, 0.55),
+          opacity: 0,
+          offset: 1,
+        },
+      ],
+      {
+        duration: 1450,
+        easing: "cubic-bezier(0.42, 0, 0.18, 1)",
+        fill: "forwards",
+      },
+    );
+
+    await wait(1180);
+    paper.classList.remove("is-entering");
     roach.classList.add("is-squashed");
     flash.classList.add("is-active");
-    await wait(330);
+    await wait(180);
     flash.classList.remove("is-active");
-    await wait(210);
+    await swat.finished.catch(() => {});
+    swat.cancel();
+    await wait(100);
+    roach.classList.remove("is-squashed");
+    roach.style.animationPlayState = "running";
   };
 
   const noSequence = async () => {
@@ -123,34 +192,54 @@
     return `NPC-${stamp}-${random}`;
   };
 
-  const showCertificate = () => {
+  const showResult = () => {
     const yesCount = answers.filter((answer) => answer === "yes").length;
-    certificate = {
-      yesCount,
-      serial: createSerial(),
-      date: new Intl.DateTimeFormat("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }).format(new Date()),
-    };
+    const wrongCount = questions.length - yesCount;
+    const passed = wrongCount === 0;
 
     paper.hidden = true;
     controls.hidden = true;
     roaches.forEach((roach) => {
       roach.hidden = true;
     });
-    certificateScore.textContent = `आज्ञाकारिता अंक: ${yesCount} / ${questions.length}`;
-    certificateSerial.textContent = certificate.serial;
+
+    certificateCard.hidden = !passed;
+    failureCard.hidden = passed;
+    downloadButton.hidden = !passed;
+
+    if (passed) {
+      certificate = {
+        yesCount,
+        serial: createSerial(),
+        date: new Intl.DateTimeFormat("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(new Date()),
+      };
+      certificateScore.textContent = `आज्ञाकारिता अंक: ${yesCount} / ${questions.length}`;
+      certificateSerial.textContent = certificate.serial;
+    } else {
+      certificate = null;
+      const wrongAnswerLabel = wrongCount === 1 ? "गलत उत्तर" : "गलत उत्तरों";
+      failureMessage.textContent = `आप ${wrongCount} ${wrongAnswerLabel} के कारण एनपीसी बनने से चूक गए।`;
+    }
+
     resultScreen.classList.add("is-active");
     resultScreen.setAttribute("aria-hidden", "false");
-    window.setTimeout(() => downloadButton.focus({ preventScroll: true }), 900);
+    window.setTimeout(
+      () =>
+        (passed ? downloadButton : restartButtons[0]).focus({
+          preventScroll: true,
+        }),
+      900,
+    );
   };
 
   const nextQuestion = () => {
     currentQuestion += 1;
     if (currentQuestion >= questions.length) {
-      showCertificate();
+      showResult();
       return;
     }
 
@@ -176,9 +265,22 @@
   const escapePdfText = (text) =>
     text.replaceAll("\\", "\\\\").replaceAll("(", "\\(").replaceAll(")", "\\)");
 
-  const buildPdf = ({ yesCount, serial, date }) => {
+  const buildPdf = async ({ yesCount, serial, date }) => {
+    const watermarkResponse = await fetch("./assets/npc-watermark.jpg", {
+      cache: "force-cache",
+    });
+    if (!watermarkResponse.ok) {
+      throw new Error("Watermark could not be loaded");
+    }
+    const watermark = new Uint8Array(await watermarkResponse.arrayBuffer());
+    const encoder = new TextEncoder();
     const score = `${yesCount} / ${questions.length}`;
     const lines = [
+      "q",
+      "/GS1 gs",
+      "330 0 0 330 132 252 cm",
+      "/Im1 Do",
+      "Q",
       "q",
       "0.22 0.23 0.16 RG",
       "2 w",
@@ -219,6 +321,11 @@
       "(NPC) Tj",
       "ET",
       "BT",
+      "/F2 9 Tf",
+      "166 132 Td",
+      "(ISSUED BY THE CENTRAL NPC ACCREDITATION COMMITTEE) Tj",
+      "ET",
+      "BT",
       "/F1 10 Tf",
       "72 96 Td",
       `(ISSUED: ${escapePdfText(date)}) Tj`,
@@ -229,44 +336,81 @@
     ].join("\n");
 
     const objects = [
-      "<< /Type /Catalog /Pages 2 0 R >>",
-      "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-      "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>",
-      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
-      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
-      `<< /Length ${new TextEncoder().encode(lines).length} >>\nstream\n${lines}\nendstream`,
+      [encoder.encode("<< /Type /Catalog /Pages 2 0 R >>")],
+      [encoder.encode("<< /Type /Pages /Kids [3 0 R] /Count 1 >>")],
+      [
+        encoder.encode(
+          "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> /ExtGState << /GS1 6 0 R >> /XObject << /Im1 7 0 R >> >> /Contents 8 0 R >>",
+        ),
+      ],
+      [encoder.encode("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>")],
+      [
+        encoder.encode(
+          "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
+        ),
+      ],
+      [encoder.encode("<< /Type /ExtGState /ca 0.09 /CA 0.09 >>")],
+      [
+        encoder.encode(
+          `<< /Type /XObject /Subtype /Image /Width 720 /Height 720 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${watermark.length} >>\nstream\n`,
+        ),
+        watermark,
+        encoder.encode("\nendstream"),
+      ],
+      [
+        encoder.encode(
+          `<< /Length ${encoder.encode(lines).length} >>\nstream\n${lines}\nendstream`,
+        ),
+      ],
     ];
 
-    let pdf = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";
+    const chunks = [encoder.encode("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n")];
     const offsets = [0];
+    let byteLength = chunks[0].length;
 
-    objects.forEach((object, index) => {
-      offsets.push(new TextEncoder().encode(pdf).length);
-      pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
+    objects.forEach((objectChunks, index) => {
+      offsets.push(byteLength);
+      const prefix = encoder.encode(`${index + 1} 0 obj\n`);
+      const suffix = encoder.encode("\nendobj\n");
+      chunks.push(prefix, ...objectChunks, suffix);
+      byteLength +=
+        prefix.length +
+        objectChunks.reduce((sum, chunk) => sum + chunk.length, 0) +
+        suffix.length;
     });
 
-    const xrefOffset = new TextEncoder().encode(pdf).length;
-    pdf += `xref\n0 ${objects.length + 1}\n`;
-    pdf += "0000000000 65535 f \n";
+    const xrefOffset = byteLength;
+    let trailer = `xref\n0 ${objects.length + 1}\n`;
+    trailer += "0000000000 65535 f \n";
     offsets.slice(1).forEach((offset) => {
-      pdf += `${String(offset).padStart(10, "0")} 00000 n \n`;
+      trailer += `${String(offset).padStart(10, "0")} 00000 n \n`;
     });
-    pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\n`;
-    pdf += `startxref\n${xrefOffset}\n%%EOF`;
+    trailer += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\n`;
+    trailer += `startxref\n${xrefOffset}\n%%EOF`;
+    chunks.push(encoder.encode(trailer));
 
-    return new Blob([new TextEncoder().encode(pdf)], { type: "application/pdf" });
+    return new Blob(chunks, { type: "application/pdf" });
   };
 
-  const downloadCertificate = () => {
+  const downloadCertificate = async () => {
     if (!certificate) return;
-    const url = URL.createObjectURL(buildPdf(certificate));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `npc-certificate-${certificate.serial}.pdf`;
-    document.body.append(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    const label = downloadButton.textContent;
+    downloadButton.disabled = true;
+    downloadButton.textContent = "प्रमाण-पत्र तैयार हो रहा है…";
+
+    try {
+      const url = URL.createObjectURL(await buildPdf(certificate));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `npc-certificate-${certificate.serial}.pdf`;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } finally {
+      downloadButton.disabled = false;
+      downloadButton.textContent = label;
+    }
   };
 
   const restartQuiz = () => {
@@ -277,6 +421,9 @@
     resultScreen.setAttribute("aria-hidden", "true");
     paper.hidden = false;
     controls.hidden = false;
+    certificateCard.hidden = false;
+    failureCard.hidden = true;
+    downloadButton.hidden = false;
     roaches.forEach((roach) => {
       roach.hidden = false;
       roach.classList.remove("is-squashed");
@@ -291,7 +438,9 @@
     button.addEventListener("click", () => answerQuestion(button.dataset.answer));
   });
   downloadButton.addEventListener("click", downloadCertificate);
-  restartButton.addEventListener("click", restartQuiz);
+  restartButtons.forEach((button) => {
+    button.addEventListener("click", restartQuiz);
+  });
 
   playVideo();
   window.addEventListener("pageshow", playVideo);

@@ -243,10 +243,29 @@ button {
   width: 100%;
   aspect-ratio: 1;
   border: 1px solid rgba(26, 25, 15, 0.58);
-  background-image: url("./assets/question-sheet.jpg");
+  background-image: url("./assets/question-sheet-v2.jpg");
   background-repeat: no-repeat;
   background-size: 400% 200%;
   filter: contrast(1.05) saturate(0.73) sepia(0.14);
+}
+
+.question-topic {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  padding: 12px;
+  color: #171910;
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(21px, 2.7vw, 42px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-shadow: 1px 0 rgba(102, 119, 76, 0.42);
+}
+
+.question-portrait.has-topic .question-topic {
+  display: grid;
 }
 
 .question-word {
@@ -263,10 +282,6 @@ button {
 
 .question-paper.is-entering {
   animation: paperEnter 390ms cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.question-paper.is-yes {
-  animation: rollAndSwat 1250ms cubic-bezier(0.55, 0, 0.7, 0.2) forwards;
 }
 
 .question-paper.is-no {
@@ -347,19 +362,19 @@ button {
 .roach-one {
   top: 65%;
   left: 9%;
-  animation: crawlOne 8s linear infinite;
+  animation: crawlOne 13s steps(8, end) infinite;
 }
 
 .roach-two {
   top: 55%;
   right: 10%;
-  animation: crawlTwo 11s linear -4s infinite;
+  animation: crawlTwo 16s steps(9, end) -6s infinite;
 }
 
 .roach-three {
   bottom: 9%;
   left: 63%;
-  animation: crawlThree 9s linear -2s infinite;
+  animation: crawlThree 14s steps(7, end) -3s infinite;
 }
 
 .roach.is-squashed {
@@ -443,6 +458,22 @@ button {
   transform: rotate(-0.45deg);
 }
 
+.certificate-card::before {
+  position: absolute;
+  inset: 9%;
+  content: "";
+  opacity: 0.095;
+  background: url("./assets/npc-watermark.jpg") center / contain no-repeat;
+  filter: grayscale(1) contrast(0.85);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.certificate-card > * {
+  position: relative;
+  z-index: 1;
+}
+
 .certificate-kicker {
   margin: 0 0 18px;
   font-size: clamp(10px, 1.3vw, 15px);
@@ -476,7 +507,8 @@ button {
 
 .certificate-copy,
 .certificate-score,
-.certificate-serial {
+.certificate-serial,
+.certificate-issuer {
   max-width: 470px;
   margin: 0 auto;
   font-family: "Noto Serif Devanagari", "Kohinoor Devanagari", Georgia, serif;
@@ -493,6 +525,53 @@ button {
   margin-top: 8px;
   font-family: "Courier New", monospace;
   font-size: clamp(10px, 1.2vw, 14px);
+}
+
+.certificate-issuer {
+  margin-top: 20px;
+  font-family: "Courier New", monospace;
+  font-size: clamp(9px, 1.1vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.failure-card {
+  width: min(84vw, 570px);
+  padding: clamp(32px, 5vw, 64px);
+  color: #1f1c12;
+  background:
+    linear-gradient(108deg, rgba(97, 74, 29, 0.13), transparent 43% 75%, rgba(53, 42, 17, 0.15)),
+    #bbb58e;
+  border: 4px double #393721;
+  box-shadow:
+    inset 0 0 42px rgba(45, 38, 17, 0.32),
+    0 20px 50px rgba(0, 0, 0, 0.48);
+  text-align: center;
+  transform: rotate(0.6deg);
+}
+
+.failure-mark {
+  margin: 0;
+  color: #6c2219;
+  font-family: Georgia, serif;
+  font-size: clamp(62px, 10vw, 108px);
+  font-weight: 700;
+  line-height: 0.65;
+}
+
+.failure-card h1 {
+  margin: 26px 0 20px;
+  font-family: "Noto Serif Devanagari", "Kohinoor Devanagari", Georgia, serif;
+  font-size: clamp(27px, 4vw, 45px);
+}
+
+.failure-message {
+  max-width: 440px;
+  margin: 0 auto;
+  font-family: "Noto Serif Devanagari", "Kohinoor Devanagari", Georgia, serif;
+  font-size: clamp(17px, 2.1vw, 24px);
+  line-height: 1.65;
 }
 
 .download-button {
@@ -556,75 +635,69 @@ button {
   }
 }
 
-@keyframes rollAndSwat {
-  0% {
-    opacity: 1;
-    transform: translate(-50%, -50%) rotate(var(--paper-turn)) scale(1);
-  }
-  34% {
-    opacity: 1;
-    transform: translate(-50%, -50%) rotate(87deg) scaleX(0.15) scaleY(1.05);
-  }
-  61% {
-    opacity: 1;
-    transform: translate(-50%, -50%) translate(27vw, 17vh) rotate(108deg) scaleX(0.12) scaleY(0.9);
-  }
-  72% {
-    opacity: 1;
-    transform: translate(-50%, -50%) translate(27vw, 24vh) rotate(112deg) scaleX(0.17) scaleY(0.56);
-  }
-  79% {
-    opacity: 1;
-    transform: translate(-50%, -50%) translate(27vw, 17vh) rotate(108deg) scaleX(0.12) scaleY(0.9);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -50%) translate(32vw, 30vh) rotate(118deg) scaleX(0.09) scaleY(0.8);
-  }
-}
-
 @keyframes crawlOne {
-  0% {
-    transform: translate(-9vw, 4vh) rotate(62deg);
+  0%,
+  23% {
+    transform: translate(0, 0) rotate(62deg);
   }
-  35% {
-    transform: translate(15vw, -8vh) rotate(95deg);
+  29% {
+    transform: translate(7vw, -2vh) rotate(82deg);
   }
-  68% {
-    transform: translate(23vw, 3vh) rotate(123deg);
+  30%,
+  58% {
+    transform: translate(7vw, -2vh) rotate(82deg);
+  }
+  65% {
+    transform: translate(11vw, 2vh) rotate(116deg);
+  }
+  66%,
+  91% {
+    transform: translate(11vw, 2vh) rotate(116deg);
   }
   100% {
-    transform: translate(43vw, -5vh) rotate(79deg);
+    transform: translate(15vw, -1vh) rotate(76deg);
   }
 }
 
 @keyframes crawlTwo {
-  0% {
-    transform: translate(15vw, -2vh) rotate(-78deg);
+  0%,
+  31% {
+    transform: translate(0, 0) rotate(-78deg);
   }
-  42% {
-    transform: translate(-16vw, 9vh) rotate(-109deg);
+  38% {
+    transform: translate(-6vw, 2vh) rotate(-104deg);
   }
-  74% {
-    transform: translate(-28vw, -5vh) rotate(-64deg);
+  39%,
+  69% {
+    transform: translate(-6vw, 2vh) rotate(-104deg);
   }
+  76% {
+    transform: translate(-10vw, -1vh) rotate(-67deg);
+  }
+  77%,
   100% {
-    transform: translate(-53vw, 5vh) rotate(-93deg);
+    transform: translate(-10vw, -1vh) rotate(-67deg);
   }
 }
 
 @keyframes crawlThree {
-  0% {
-    transform: translate(5vw, 14vh) rotate(-13deg);
+  0%,
+  18% {
+    transform: translate(0, 0) rotate(-13deg);
   }
-  36% {
-    transform: translate(-3vw, -12vh) rotate(17deg);
+  25% {
+    transform: translate(-3vw, -5vh) rotate(16deg);
   }
-  70% {
-    transform: translate(10vw, -21vh) rotate(-26deg);
+  26%,
+  61% {
+    transform: translate(-3vw, -5vh) rotate(16deg);
   }
+  68% {
+    transform: translate(3vw, -8vh) rotate(-25deg);
+  }
+  69%,
   100% {
-    transform: translate(-8vw, -38vh) rotate(12deg);
+    transform: translate(3vw, -8vh) rotate(-25deg);
   }
 }
 
@@ -722,6 +795,11 @@ button {
     padding: 28px 22px;
   }
 
+  .failure-card {
+    width: min(91vw, 520px);
+    padding: 34px 24px;
+  }
+
   .certificate-seal {
     margin: 20px auto;
   }
@@ -760,6 +838,11 @@ button {
     width: min(64vw, 560px);
     min-height: 0;
     padding: 20px 36px;
+  }
+
+  .failure-card {
+    width: min(64vw, 560px);
+    padding: 22px 34px;
   }
 
   .certificate-seal {
