@@ -1002,29 +1002,18 @@ button {
   }
 
   .correct-reward {
-    --reward-position: center 39%;
+    --reward-position: center;
   }
 
   .correct-reward::before {
-    inset: 0;
+    inset: -3%;
+    background-image: url("./assets/modi-melody-mobile-v2.webp");
     background-position: var(--reward-position);
-    background-size: min(92vw, 500px) auto;
+    background-size: cover;
     background-repeat: no-repeat;
-    transform-origin: center 39%;
-    -webkit-mask-image: radial-gradient(
-      ellipse 72% 24% at 50% 39%,
-      #000 0%,
-      rgba(0, 0, 0, 0.98) 48%,
-      rgba(0, 0, 0, 0.48) 72%,
-      transparent 100%
-    );
-    mask-image: radial-gradient(
-      ellipse 72% 24% at 50% 39%,
-      #000 0%,
-      rgba(0, 0, 0, 0.98) 48%,
-      rgba(0, 0, 0, 0.48) 72%,
-      transparent 100%
-    );
+    transform-origin: center 44%;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
   .certificate-card {
