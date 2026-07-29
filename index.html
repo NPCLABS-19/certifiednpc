@@ -3,154 +3,104 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="एनपीसी प्रमाण-पत्र" />
+    <meta name="theme-color" content="#050704" />
+    <meta
+      name="description"
+      content="एनपीसी प्रमाण-पत्र पाइए, दुख-दर्द से छुटकारा पाइए।"
+    />
+    <meta property="og:title" content="Certified NPC" />
+    <meta
+      property="og:description"
+      content="आठ प्रश्न। दो उत्तर। एक प्रमाण-पत्र।"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://certifiednpc.site/" />
+    <meta property="og:image" content="https://certifiednpc.site/assets/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="675" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://certifiednpc.site/assets/og.png" />
     <title>Certified NPC</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        background: #000;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        min-width: 100%;
-        min-height: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background: #000;
-        overscroll-behavior: none;
-      }
-
-      body {
-        position: fixed;
-        inset: 0;
-      }
-
-      .video-stage {
-        position: fixed;
-        inset: 0;
-        width: 100vw;
-        height: 100vh;
-        height: 100dvh;
-        overflow: hidden;
-        background: #000;
-      }
-
-      .background-video {
-        position: absolute;
-        inset: 0;
-        display: block;
-        width: 100%;
-        height: 100%;
-        max-width: none;
-        object-fit: cover;
-        object-position: center;
-        border: 0;
-        background: #000;
-        pointer-events: none;
-        user-select: none;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-      }
-
-      .certification-button {
-        position: fixed;
-        z-index: 1;
-        top: 50%;
-        left: 50%;
-        width: auto;
-        max-width: calc(100vw - 32px);
-        margin: 0;
-        padding: 8px 12px;
-        transform: translate(-50%, -50%);
-        border: 0;
-        background: transparent;
-        color: #fff;
-        font-family: "Noto Sans Devanagari", "Kohinoor Devanagari", Mangal, sans-serif;
-        font-size: 18px;
-        font-weight: 500;
-        line-height: 1.4;
-        text-align: center;
-        text-decoration-line: underline;
-        text-decoration-thickness: 1px;
-        text-underline-offset: 5px;
-        text-wrap: balance;
-        cursor: default;
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      .background-video::-webkit-media-controls,
-      .background-video::-webkit-media-controls-enclosure,
-      .background-video::-webkit-media-controls-panel,
-      .background-video::-webkit-media-controls-start-playback-button {
-        display: none !important;
-        opacity: 0 !important;
-      }
-
-      @media (max-width: 767px) {
-        .certification-button {
-          width: calc(100vw - 32px);
-          font-size: 16px;
-        }
-      }
-    </style>
+    <link rel="preload" href="./assets/quiz-desk.jpg" as="image" />
+    <link rel="preload" href="./assets/officer-jumpscare.jpg" as="image" />
+    <link rel="preload" href="./assets/question-sheet.jpg" as="image" />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="video-stage">
-      <video
-        class="background-video"
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="auto"
-        disablepictureinpicture
-        disableremoteplayback
-        aria-hidden="true"
-        tabindex="-1"
-      >
-        <source
-          src="./assets/background-mobile.mp4"
-          type="video/mp4"
-          media="(max-aspect-ratio: 3/4)"
-        />
-        <source src="./assets/background-desktop.mp4" type="video/mp4" />
-      </video>
+    <main>
+      <section class="video-stage" aria-label="एनपीसी प्रमाण-पत्र">
+        <video
+          class="background-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          disablepictureinpicture
+          disableremoteplayback
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          <source
+            src="./assets/background-mobile.mp4"
+            type="video/mp4"
+            media="(max-aspect-ratio: 3/4)"
+          />
+          <source src="./assets/background-desktop.mp4" type="video/mp4" />
+        </video>
 
-      <button class="certification-button" type="button">
-        एनपीसी प्रमाण-पत्र पाइए, दुख-दर्द से छुटकारा पाइए
-      </button>
+        <button class="certification-button" type="button">
+          एनपीसी प्रमाण-पत्र पाइए, दुख-दर्द से छुटकारा पाइए
+        </button>
+      </section>
+
+      <section class="quiz-stage" aria-label="एनपीसी परीक्षा" aria-hidden="true">
+        <div class="vhs-damage" aria-hidden="true"></div>
+
+        <div class="roach-layer" aria-hidden="true">
+          <img class="roach roach-one" src="./assets/cockroach.png" alt="" />
+          <img class="roach roach-two" src="./assets/cockroach.png" alt="" />
+          <img class="roach roach-three" src="./assets/cockroach.png" alt="" />
+        </div>
+
+        <article class="question-paper" aria-live="polite">
+          <div class="question-portrait" role="img"></div>
+          <p class="question-word">समर्थन?</p>
+        </article>
+
+        <div class="answer-controls" aria-label="अपना उत्तर चुनें">
+          <button class="answer-button answer-yes" type="button" data-answer="yes">
+            हाँ
+          </button>
+          <button class="answer-button answer-no" type="button" data-answer="no">
+            नहीं
+          </button>
+        </div>
+
+        <div class="officer-jumpscare" aria-hidden="true"></div>
+        <div class="impact-flash" aria-hidden="true"></div>
+
+        <section class="result-screen" aria-hidden="true">
+          <div class="certificate-card">
+            <p class="certificate-kicker">भारत गणराज्य के काल्पनिक अभिलेख हेतु</p>
+            <h1>एनपीसी प्रमाण-पत्र</h1>
+            <div class="certificate-seal" aria-hidden="true">NPC</div>
+            <p class="certificate-copy">
+              यह प्रमाणित किया जाता है कि धारक ने आठ प्रश्नों की
+              आज्ञाकारिता परीक्षा पूरी कर ली है।
+            </p>
+            <p class="certificate-score"></p>
+            <p class="certificate-serial"></p>
+          </div>
+
+          <button class="download-button" type="button">
+            प्रमाण-पत्र डाउनलोड करें
+          </button>
+          <button class="restart-button" type="button">पुनः परीक्षा दें</button>
+        </section>
+      </section>
     </main>
 
-    <script>
-      (() => {
-        const video = document.querySelector(".background-video");
-        if (!video) return;
-
-        const play = () => {
-          video.muted = true;
-          video.defaultMuted = true;
-          video.loop = true;
-          video.playsInline = true;
-          video.setAttribute("muted", "");
-          video.setAttribute("playsinline", "");
-          video.play().catch(() => {});
-        };
-
-        play();
-        window.addEventListener("pageshow", play);
-        document.addEventListener("visibilitychange", () => {
-          if (!document.hidden) play();
-        });
-      })();
-    </script>
+    <script src="./app.js" defer></script>
   </body>
 </html>
