@@ -173,6 +173,33 @@ button {
   animation: tracking 850ms steps(4, end) infinite;
 }
 
+.lobby-button {
+  position: absolute;
+  z-index: 29;
+  top: max(18px, env(safe-area-inset-top));
+  left: max(18px, env(safe-area-inset-left));
+  margin: 0;
+  padding: 7px 9px;
+  border: 0;
+  outline: 0;
+  color: rgba(232, 232, 203, 0.82);
+  background: rgba(7, 10, 5, 0.36);
+  font-family: "Noto Sans Devanagari", "Kohinoor Devanagari", Mangal, sans-serif;
+  font-size: 13px;
+  line-height: 1.2;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-shadow: 0 1px 5px #000;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+}
+
+.lobby-button:hover,
+.lobby-button:focus-visible {
+  color: #fff;
+  background: rgba(7, 10, 5, 0.68);
+}
+
 .quiz-started .video-stage {
   opacity: 0;
   filter: contrast(2.1) brightness(0.35);

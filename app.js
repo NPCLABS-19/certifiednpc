@@ -22,6 +22,7 @@
   const video = document.querySelector(".background-video");
   const startButton = document.querySelector(".certification-button");
   const quizStage = document.querySelector(".quiz-stage");
+  const lobbyButton = document.querySelector(".lobby-button");
   const paper = document.querySelector(".question-paper");
   const portrait = document.querySelector(".question-portrait");
   const topic = document.querySelector(".question-topic");
@@ -44,6 +45,7 @@
   let answers = [];
   let locked = false;
   let certificate = null;
+  let sessionId = 0;
 
   const wait = (milliseconds) =>
     new Promise((resolve) => window.setTimeout(resolve, milliseconds));
@@ -76,6 +78,7 @@
 
   const startQuiz = async () => {
     if (body.classList.contains("quiz-started")) return;
+    sessionId += 1;
     body.classList.add("quiz-started");
     quizStage.setAttribute("aria-hidden", "false");
     startButton.setAttribute("aria-hidden", "true");
@@ -101,27 +104,32 @@
     });
   };
 
-  const correctSequence = async () => {
+  const correctSequence = async (activeSession) => {
     paper.classList.remove("is-entering");
     paper.classList.add("is-no");
     await wait(180);
+    if (activeSession !== sessionId) return;
     reward.classList.add("is-active");
     await wait(2200);
     reward.classList.remove("is-active");
+    if (activeSession !== sessionId) return;
     await wait(80);
   };
 
-  const incorrectSequence = async () => {
+  const incorrectSequence = async (activeSession) => {
     paper.classList.remove("is-entering");
     paper.classList.add("is-no");
     await wait(150);
+    if (activeSession !== sessionId) return;
     officer.classList.add("is-active");
     await wait(430);
+    if (activeSession !== sessionId) return;
     quizStage.classList.add("is-hit");
     flash.classList.add("is-active");
     await wait(400);
     quizStage.classList.remove("is-hit");
     flash.classList.remove("is-active");
+    if (activeSession !== sessionId) return;
     await wait(260);
     officer.classList.remove("is-active");
   };
@@ -195,16 +203,18 @@
 
   const answerQuestion = async (answer) => {
     if (locked) return;
+    const activeSession = sessionId;
     lockAnswers();
     const correct = answer === questions[currentQuestion].expected;
     answers.push({ answer, correct });
 
     if (correct) {
-      await correctSequence();
+      await correctSequence(activeSession);
     } else {
-      await incorrectSequence();
+      await incorrectSequence(activeSession);
     }
 
+    if (activeSession !== sessionId) return;
     nextQuestion();
   };
 
@@ -360,6 +370,7 @@
   };
 
   const restartQuiz = () => {
+    sessionId += 1;
     currentQuestion = 0;
     answers = [];
     certificate = null;
@@ -379,7 +390,38 @@
     answerButtons[0].focus({ preventScroll: true });
   };
 
+  const returnToLobby = () => {
+    sessionId += 1;
+    currentQuestion = 0;
+    answers = [];
+    certificate = null;
+    reward.classList.remove("is-active");
+    officer.classList.remove("is-active");
+    flash.classList.remove("is-active");
+    quizStage.classList.remove("is-hit");
+    resultScreen.classList.remove("is-active");
+    resultScreen.setAttribute("aria-hidden", "true");
+    certificateCard.hidden = false;
+    failureCard.hidden = true;
+    downloadButton.hidden = false;
+    paper.hidden = false;
+    controls.hidden = false;
+    roaches.forEach((roach) => {
+      roach.hidden = false;
+      roach.classList.remove("is-squashed");
+      roach.style.animationPlayState = "running";
+    });
+    setQuestion(0);
+    unlockAnswers();
+    quizStage.setAttribute("aria-hidden", "true");
+    startButton.setAttribute("aria-hidden", "false");
+    body.classList.remove("quiz-started");
+    playVideo();
+    window.setTimeout(() => startButton.focus({ preventScroll: true }), 350);
+  };
+
   startButton.addEventListener("click", startQuiz);
+  lobbyButton.addEventListener("click", returnToLobby);
   answerButtons.forEach((button) => {
     button.addEventListener("click", () => answerQuestion(button.dataset.answer));
   });
