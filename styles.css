@@ -1002,23 +1002,27 @@ button {
   }
 
   .correct-reward {
-    --reward-position: 55% center;
+    --reward-position: center 39%;
   }
 
   .correct-reward::before {
+    inset: 0;
     background-position: var(--reward-position);
+    background-size: min(92vw, 500px) auto;
+    background-repeat: no-repeat;
+    transform-origin: center 39%;
     -webkit-mask-image: radial-gradient(
-      ellipse 92% 78% at 55% 52%,
+      ellipse 72% 24% at 50% 39%,
       #000 0%,
-      rgba(0, 0, 0, 0.98) 52%,
-      rgba(0, 0, 0, 0.5) 76%,
+      rgba(0, 0, 0, 0.98) 48%,
+      rgba(0, 0, 0, 0.48) 72%,
       transparent 100%
     );
     mask-image: radial-gradient(
-      ellipse 92% 78% at 55% 52%,
+      ellipse 72% 24% at 50% 39%,
       #000 0%,
-      rgba(0, 0, 0, 0.98) 52%,
-      rgba(0, 0, 0, 0.5) 76%,
+      rgba(0, 0, 0, 0.98) 48%,
+      rgba(0, 0, 0, 0.48) 72%,
       transparent 100%
     );
   }
