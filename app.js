@@ -2,14 +2,20 @@
   "use strict";
 
   const questions = [
-    { subject: "बेंजामिन नेतन्याहू", x: "0%", y: "0%" },
-    { subject: "नरेंद्र मोदी", x: "33.333%", y: "0%" },
-    { subject: "FEMINISM", x: "66.666%", y: "0%", topic: "FEMINISM" },
-    { subject: "कृत्रिम बुद्धिमत्ता", x: "100%", y: "0%" },
-    { subject: "अर्नब गोस्वामी", x: "0%", y: "100%" },
-    { subject: "महात्मा गांधी", x: "33.333%", y: "100%" },
-    { subject: "डोनाल्ड ट्रम्प", x: "66.666%", y: "100%" },
-    { subject: "मुकेश अंबानी", x: "100%", y: "100%" },
+    { subject: "बेंजामिन नेतन्याहू", x: "0%", y: "0%", expected: "yes" },
+    { subject: "नरेंद्र मोदी", x: "33.333%", y: "0%", expected: "yes" },
+    {
+      subject: "FEMINISM",
+      x: "66.666%",
+      y: "0%",
+      topic: "FEMINISM",
+      expected: "no",
+    },
+    { subject: "कृत्रिम बुद्धिमत्ता", x: "100%", y: "0%", expected: "yes" },
+    { subject: "अर्नब गोस्वामी", x: "0%", y: "100%", expected: "yes" },
+    { subject: "महात्मा गांधी", x: "33.333%", y: "100%", expected: "no" },
+    { subject: "डोनाल्ड ट्रम्प", x: "66.666%", y: "100%", expected: "yes" },
+    { subject: "मुकेश अंबानी", x: "100%", y: "100%", expected: "yes" },
   ];
 
   const body = document.body;
@@ -21,6 +27,7 @@
   const topic = document.querySelector(".question-topic");
   const controls = document.querySelector(".answer-controls");
   const answerButtons = [...document.querySelectorAll(".answer-button")];
+  const reward = document.querySelector(".correct-reward");
   const officer = document.querySelector(".officer-jumpscare");
   const flash = document.querySelector(".impact-flash");
   const roaches = [...document.querySelectorAll(".roach")];
@@ -94,79 +101,17 @@
     });
   };
 
-  const yesSequence = async () => {
-    const roach = roaches[currentQuestion % roaches.length];
+  const correctSequence = async () => {
     paper.classList.remove("is-entering");
-    paper.getAnimations().forEach((animation) => animation.cancel());
-    roach.style.animationPlayState = "paused";
-
-    const paperRect = paper.getBoundingClientRect();
-    const roachRect = roach.getBoundingClientRect();
-    const deltaX =
-      roachRect.left + roachRect.width / 2 - (paperRect.left + paperRect.width / 2);
-    const deltaY =
-      roachRect.top + roachRect.height / 2 - (paperRect.top + paperRect.height / 2);
-    const turn = currentQuestion % 2 === 0 ? -1.4 : 1.1;
-    const base = `translate(-50%, -50%) rotate(${turn}deg) perspective(650px) rotateX(4deg)`;
-    const move = (x, y, rotation, scaleX, scaleY) =>
-      `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${rotation}deg) scaleX(${scaleX}) scaleY(${scaleY})`;
-
-    paper.style.willChange = "transform, opacity";
-    const swat = paper.animate(
-      [
-        { transform: base, opacity: 1, offset: 0 },
-        {
-          transform: move(0, 0, 87, 0.16, 1.04),
-          opacity: 1,
-          offset: 0.3,
-        },
-        {
-          transform: move(deltaX * 0.42, deltaY * 0.2 - 34, 94, 0.13, 1),
-          opacity: 1,
-          offset: 0.52,
-        },
-        {
-          transform: move(deltaX * 0.86, deltaY * 0.52 - 48, 103, 0.13, 0.98),
-          opacity: 1,
-          offset: 0.73,
-        },
-        {
-          transform: move(deltaX, deltaY, 108, 0.2, 0.48),
-          opacity: 1,
-          offset: 0.82,
-        },
-        {
-          transform: move(deltaX * 0.91, deltaY * 0.7 - 20, 104, 0.13, 0.86),
-          opacity: 1,
-          offset: 0.91,
-        },
-        {
-          transform: move(deltaX, deltaY, 109, 0.16, 0.55),
-          opacity: 0,
-          offset: 1,
-        },
-      ],
-      {
-        duration: 1450,
-        easing: "cubic-bezier(0.42, 0, 0.18, 1)",
-        fill: "forwards",
-      },
-    );
-
-    await wait(1180);
-    paper.classList.remove("is-entering");
-    roach.classList.add("is-squashed");
-    flash.classList.add("is-active");
+    paper.classList.add("is-no");
     await wait(180);
-    flash.classList.remove("is-active");
-    await swat.finished.catch(() => {});
-    swat.cancel();
-    await wait(100);
-    roach.classList.remove("is-squashed");
-    roach.style.animationPlayState = "running";
+    reward.classList.add("is-active");
+    await wait(1750);
+    reward.classList.remove("is-active");
+    await wait(80);
   };
 
-  const noSequence = async () => {
+  const incorrectSequence = async () => {
     paper.classList.remove("is-entering");
     paper.classList.add("is-no");
     await wait(150);
@@ -193,8 +138,8 @@
   };
 
   const showResult = () => {
-    const yesCount = answers.filter((answer) => answer === "yes").length;
-    const wrongCount = questions.length - yesCount;
+    const correctCount = answers.filter((answer) => answer.correct).length;
+    const wrongCount = questions.length - correctCount;
     const passed = wrongCount === 0;
 
     paper.hidden = true;
@@ -209,7 +154,7 @@
 
     if (passed) {
       certificate = {
-        yesCount,
+        correctCount,
         serial: createSerial(),
         date: new Intl.DateTimeFormat("en-GB", {
           day: "2-digit",
@@ -217,7 +162,7 @@
           year: "numeric",
         }).format(new Date()),
       };
-      certificateScore.textContent = `आज्ञाकारिता अंक: ${yesCount} / ${questions.length}`;
+      certificateScore.textContent = `सही उत्तर: ${correctCount} / ${questions.length}`;
       certificateSerial.textContent = certificate.serial;
     } else {
       certificate = null;
@@ -251,12 +196,13 @@
   const answerQuestion = async (answer) => {
     if (locked) return;
     lockAnswers();
-    answers.push(answer);
+    const correct = answer === questions[currentQuestion].expected;
+    answers.push({ answer, correct });
 
-    if (answer === "yes") {
-      await yesSequence();
+    if (correct) {
+      await correctSequence();
     } else {
-      await noSequence();
+      await incorrectSequence();
     }
 
     nextQuestion();
@@ -265,7 +211,7 @@
   const escapePdfText = (text) =>
     text.replaceAll("\\", "\\\\").replaceAll("(", "\\(").replaceAll(")", "\\)");
 
-  const buildPdf = async ({ yesCount, serial, date }) => {
+  const buildPdf = async ({ correctCount, serial, date }) => {
     const watermarkResponse = await fetch("./assets/npc-watermark.jpg", {
       cache: "force-cache",
     });
@@ -274,7 +220,7 @@
     }
     const watermark = new Uint8Array(await watermarkResponse.arrayBuffer());
     const encoder = new TextEncoder();
-    const score = `${yesCount} / ${questions.length}`;
+    const score = `${correctCount} / ${questions.length}`;
     const lines = [
       "q",
       "/GS1 gs",
