@@ -106,7 +106,7 @@
     paper.classList.add("is-no");
     await wait(180);
     reward.classList.add("is-active");
-    await wait(1750);
+    await wait(2200);
     reward.classList.remove("is-active");
     await wait(80);
   };
